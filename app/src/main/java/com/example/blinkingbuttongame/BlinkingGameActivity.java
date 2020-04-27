@@ -68,11 +68,13 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                     didGameStart = true;
                     game = new BlinkingGame();
                     buttonStart.setText("");
+                    buttonRoundNumber.setText("" + game.getRoundNumber());
                     runBlinkSequence();
                 }
                 else
                 {
                     game.nextRound();
+                    buttonRoundNumber.setText("" + game.getRoundNumber());
                     runBlinkSequence();
                 }
             }
@@ -90,7 +92,9 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                 {
                     buttonStart.setText("Retry");
                     didGameStart = false;
+                    game = new BlinkingGame();
                 }
+                testers();
             }
         });
     }
@@ -167,5 +171,21 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             buttonD.setEnabled(b);
             buttonE.setEnabled(b);
         }
+
+        public void testers()
+        {
+            buttonA.setText(game.getPattern());
+        }
+
+
+    public void timer(long milli)
+    {
+        try {
+            Thread.sleep(milli);
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
 }
 

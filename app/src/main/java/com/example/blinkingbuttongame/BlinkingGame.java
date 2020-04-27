@@ -1,6 +1,10 @@
 package com.example.blinkingbuttongame;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.view.animation.Animation;
 import android.widget.Button;
 
 import java.util.TimerTask;
@@ -12,11 +16,18 @@ public class BlinkingGame {
     String pattern;
     boolean blinking;
 
+    int primary, primaryDark, accent;
+
     public BlinkingGame()
     { roundNumber = 1;
     userSubmission = "";
     pattern = "";
     blinking = false;
+
+    primary = Color.parseColor("#5250DF");
+    primaryDark = Color.parseColor("#3700B3");
+    accent = Color.parseColor("#1FBF8D");
+
     generatePattern();
     }
 
@@ -25,7 +36,7 @@ public class BlinkingGame {
         pattern = "";
         for (int x=0; x<roundNumber; x++)
         {
-            int spot = (int)Math.random() * 5 + 1;
+            int spot = (int)(Math.random() * 5 + 1);
             String letter = "abcde".substring(spot-1,spot);
 
             pattern += letter;
@@ -35,20 +46,20 @@ public class BlinkingGame {
 
     public void buttonBlink(Button button)
     {
-        button.setBackgroundColor(Color.GREEN);
-        timer(1000);
-        button.setBackgroundColor(Color.GRAY);
+        blinkEffect(button);
     }
 
-    public void timer(long milli)
+    public void blinkEffect(Button button)
     {
-        try {
-            Thread.sleep(milli);
-        }
-        catch(InterruptedException e){
-            e.printStackTrace();
+        ObjectAnimator anime = ObjectAnimator.ofInt(button, "BackgroundColor", primary, accent, primary);
+        anime.setDuration(1000);
+        anime.setEvaluator(new ArgbEvaluator());
+        anime.setRepeatMode(ValueAnimator.REVERSE);
+        anime.setRepeatCount(Animation.ABSOLUTE);
+        anime.start();
     }
-    }
+
+    //////////////////////////////////////////////////////////////////////
 
     public boolean match()
     {
@@ -62,6 +73,7 @@ public class BlinkingGame {
     public void nextRound() 
     {
         roundNumber++;
+        userSubmission = "";
         generatePattern();
     }
 
