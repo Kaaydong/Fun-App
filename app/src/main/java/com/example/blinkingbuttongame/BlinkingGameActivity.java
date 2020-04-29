@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,7 +21,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
     Boolean didGameStart;
     BlinkingGame game;
 
-    String letterInPattern;
+    int letterCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,11 +135,9 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             buttonStart.setEnabled(false);
             setButtonStatus(false);
             buttonIndicator.setBackgroundColor(Color.RED);
-
+            letterCounter = -1;
             for (int i = 0; i < game.getRoundNumber(); i++)
             {
-                letterInPattern = game.getLetterInPatten(i,i+1);
-
                 ButtonBlinkingTask task = new ButtonBlinkingTask();
                 task.execute();
             }
@@ -179,6 +178,8 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         @Override
         protected void onProgressUpdate(Void... values) {
 
+            String letterInPattern = game.getLetterInPatten(letterCounter,letterCounter+1);
+
             if(letterInPattern.equals("a"))
             {
                 game.buttonBlink(buttonA);
@@ -206,6 +207,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         protected Void doInBackground(Void... voids) {
 
             timer(1000);
+            letterCounter++;
             publishProgress(voids);
             return null;
         }
