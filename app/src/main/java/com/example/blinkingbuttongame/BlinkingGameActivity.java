@@ -2,6 +2,7 @@ package com.example.blinkingbuttongame;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
 
     Boolean didGameStart;
     BlinkingGame game;
+
+    String letterInPattern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,6 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                     didGameStart = false;
                     game = new BlinkingGame();
                 }
-                testers();
             }
         });
     }
@@ -135,32 +137,16 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
 
             for (int i = 0; i < game.getRoundNumber(); i++)
             {
-                String letterInPattern = game.getLetterInPatten(i,i+1);
+                letterInPattern = game.getLetterInPatten(i,i+1);
 
-                if(letterInPattern.equals("a"))
-                {
-                    game.buttonBlink(buttonA);
-                }
-                else if(letterInPattern.equals("b"))
-                {
-                    game.buttonBlink(buttonB);
-                }
-                else if(letterInPattern.equals("c"))
-                {
-                    game.buttonBlink(buttonC);
-                }
-                else if(letterInPattern.equals("d"))
-                {
-                    game.buttonBlink(buttonD);
-                }
-                else
-                {
-                    game.buttonBlink(buttonE);
-                }
+                ButtonBlinkingTask task = new ButtonBlinkingTask();
+                task.execute();
             }
             setButtonStatus(true);
             buttonIndicator.setBackgroundColor(Color.GREEN);
             buttonSubmit.setEnabled(true);
+
+            testers();
         }
 
         public void setButtonStatus(boolean b) // true enables, false disables
@@ -187,5 +173,44 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             e.printStackTrace();
         }
     }
+
+    private class ButtonBlinkingTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+            if(letterInPattern.equals("a"))
+            {
+                game.buttonBlink(buttonA);
+            }
+            else if(letterInPattern.equals("b"))
+            {
+                game.buttonBlink(buttonB);
+            }
+            else if(letterInPattern.equals("c"))
+            {
+                game.buttonBlink(buttonC);
+            }
+            else if(letterInPattern.equals("d"))
+            {
+                game.buttonBlink(buttonD);
+            }
+            else
+            {
+                game.buttonBlink(buttonE);
+            }
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            timer(1000);
+            publishProgress(voids);
+            return null;
+        }
+    }
 }
+
+
 

@@ -101,5 +101,7 @@ public class BlinkingGame {
     {
         return pattern.substring(pos1,pos2);
     }
+
+
 }
 
