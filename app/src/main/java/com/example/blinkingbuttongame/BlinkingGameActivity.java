@@ -52,6 +52,8 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         buttonSubmit = findViewById(R.id.button_blink_submit);
 
         backButton = (ImageButton)findViewById(R.id.imageButton_blink_back);
+
+        buttonIndicator.setBackgroundColor(Color.RED);
     }
 
     public void setListeners()
@@ -67,7 +69,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (didGameStart == false)
+                if (didGameStart == false) // starts the game
                 {
                     didGameStart = true;
                     game = new BlinkingGame();
@@ -132,20 +134,9 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
 
         public void runBlinkSequence()
         {
-            buttonStart.setEnabled(false);
-            setButtonStatus(false);
-            buttonIndicator.setBackgroundColor(Color.RED);
-            letterCounter = -1;
-            for (int i = 0; i < game.getRoundNumber(); i++)
-            {
-                ButtonBlinkingTask task = new ButtonBlinkingTask();
-                task.execute();
-            }
-            setButtonStatus(true);
-            buttonIndicator.setBackgroundColor(Color.GREEN);
-            buttonSubmit.setEnabled(true);
-
-            testers();
+            game.updateBlinkTime();
+            DisableButtons disableButtonsTask = new DisableButtons();
+            disableButtonsTask.execute();
         }
 
         public void setButtonStatus(boolean b) // true enables, false disables
@@ -176,6 +167,15 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
     private class ButtonBlinkingTask extends AsyncTask<Void, Void, Void> {
 
         @Override
+        protected Void doInBackground(Void... voids) {
+
+            timer(game.getBlinkTime());
+            letterCounter++;
+            publishProgress(voids);
+            return null;
+        }
+
+        @Override
         protected void onProgressUpdate(Void... values) {
 
             String letterInPattern = game.getLetterInPatten(letterCounter,letterCounter+1);
@@ -202,14 +202,42 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             }
             super.onProgressUpdate(values);
         }
+    }
+
+    private class DisableButtons extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected void onPreExecute() {
+
+            buttonStart.setEnabled(false);
+            setButtonStatus(false);
+            buttonIndicator.setBackgroundColor(Color.RED);
+
+            letterCounter = -1;
+            for (int i = 0; i < game.getRoundNumber(); i++)
+            {
+                ButtonBlinkingTask task = new ButtonBlinkingTask();
+                task.execute();
+            }
+
+            super.onPreExecute();
+        }
 
         @Override
         protected Void doInBackground(Void... voids) {
-
-            timer(1000);
-            letterCounter++;
+            timer(game.getBlinkTime());
             publishProgress(voids);
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+            setButtonStatus(true);
+            buttonIndicator.setBackgroundColor(Color.GREEN);
+            buttonSubmit.setEnabled(true);
+
+            super.onProgressUpdate(values);
         }
     }
 }

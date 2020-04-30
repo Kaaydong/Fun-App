@@ -17,12 +17,14 @@ public class BlinkingGame {
     boolean blinking;
 
     int primary, primaryDark, accent;
+    int blinkTime;
 
     public BlinkingGame()
     { roundNumber = 1;
     userSubmission = "";
     pattern = "";
     blinking = false;
+    blinkTime = 1000;
 
     primary = Color.parseColor("#5250DF");
     primaryDark = Color.parseColor("#3700B3");
@@ -52,7 +54,7 @@ public class BlinkingGame {
     public void blinkEffect(Button button)
     {
         ObjectAnimator anime = ObjectAnimator.ofInt(button, "BackgroundColor", primary, accent, primary);
-        anime.setDuration(1000);
+        anime.setDuration(blinkTime);
         anime.setEvaluator(new ArgbEvaluator());
         anime.setRepeatMode(ValueAnimator.REVERSE);
         anime.setRepeatCount(Animation.ABSOLUTE);
@@ -102,6 +104,15 @@ public class BlinkingGame {
         return pattern.substring(pos1,pos2);
     }
 
+    public void updateBlinkTime()
+    {
+        blinkTime = (int)(blinkTime * (Math.pow(.98,roundNumber)));
+    }
+
+    public int getBlinkTime()
+    {
+        return blinkTime;
+    }
 
 }
 
