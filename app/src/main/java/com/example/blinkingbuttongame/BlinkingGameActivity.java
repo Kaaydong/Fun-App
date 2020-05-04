@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -93,6 +91,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                 if(game.match())
                 {
                     buttonStart.setText("Next Match");
+
                 }
                 else
                 {
@@ -111,18 +110,23 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             {
                 case R.id.button_blink_a:
                     game.editUserSubmission("a");
+                    game.buttonBlinkAfterPress(buttonA);
                     break;
                 case R.id.button_blink_b:
                     game.editUserSubmission("b");
+                    game.buttonBlinkAfterPress(buttonB);
                     break;
                 case R.id.button_blink_c:
                     game.editUserSubmission("c");
+                    game.buttonBlinkAfterPress(buttonC);
                     break;
                 case R.id.button_blink_d:
                     game.editUserSubmission("d");
+                    game.buttonBlinkAfterPress(buttonD);
                     break;
                 case R.id.button_blink_e:
                     game.editUserSubmission("e");
+                    game.buttonBlinkAfterPress(buttonE);
                     break;
                 case R.id.imageButton_blink_back:
                     Intent targetIntent = new Intent(BlinkingGameActivity.this,MainActivity2.class);
@@ -182,26 +186,27 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
 
             if(letterInPattern.equals("a"))
             {
-                game.buttonBlink(buttonA);
+                game.buttonBlinkIndicator(buttonA);
             }
             else if(letterInPattern.equals("b"))
             {
-                game.buttonBlink(buttonB);
+                game.buttonBlinkIndicator(buttonB);
             }
             else if(letterInPattern.equals("c"))
             {
-                game.buttonBlink(buttonC);
+                game.buttonBlinkIndicator(buttonC);
             }
             else if(letterInPattern.equals("d"))
             {
-                game.buttonBlink(buttonD);
+                game.buttonBlinkIndicator(buttonD);
             }
             else
             {
-                game.buttonBlink(buttonE);
+                game.buttonBlinkIndicator(buttonE);
             }
             super.onProgressUpdate(values);
         }
+
     }
 
     private class DisableButtons extends AsyncTask<Void, Void, Void>{

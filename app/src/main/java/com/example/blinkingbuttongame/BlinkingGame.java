@@ -46,18 +46,23 @@ public class BlinkingGame {
         return pattern;
     }
 
-    public void buttonBlink(Button button)
+    public void buttonBlinkIndicator(Button button)
     {
-        blinkEffect(button);
+        blinkEffect(button, Animation.ABSOLUTE, blinkTime, primary, accent, primary);
     }
 
-    public void blinkEffect(Button button)
+    public void buttonBlinkAfterPress(Button button)
     {
-        ObjectAnimator anime = ObjectAnimator.ofInt(button, "BackgroundColor", primary, accent, primary);
-        anime.setDuration(blinkTime);
+        blinkEffect(button, Animation.ABSOLUTE, 200, primary, accent, primary);
+    }
+
+    public void blinkEffect(Button button, int repeatCount, int blinkingTime, int startingColor, int middleColor, int endingColor)
+    {
+        ObjectAnimator anime = ObjectAnimator.ofInt(button, "BackgroundColor", startingColor, middleColor, endingColor);
+        anime.setDuration(blinkingTime);
         anime.setEvaluator(new ArgbEvaluator());
         anime.setRepeatMode(ValueAnimator.REVERSE);
-        anime.setRepeatCount(Animation.ABSOLUTE);
+        anime.setRepeatCount(repeatCount);
         anime.start();
     }
 
