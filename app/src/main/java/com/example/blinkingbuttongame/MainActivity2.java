@@ -59,12 +59,14 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
         switch(item.getItemId())
         {
             case R.id.nav_blinkingGame:
-                Intent targetIntent = new Intent(MainActivity2.this, BlinkingGameActivity.class);
-                startActivity(targetIntent);
+                Intent blinkingIntent = new Intent(MainActivity2.this, BlinkingGameActivity.class);
+                startActivity(blinkingIntent);
                 finish();
                 break;
               case R.id.nav_waifuGenerator:
-            Toast.makeText(this, "Still in Dev", Toast.LENGTH_SHORT).show();
+                Intent waifuIntent = new Intent(MainActivity2.this, WaifuSearcherActivty.class);
+                startActivity(waifuIntent);
+                finish();
                 break;
                case R.id.nav_husbandoGenerator:
             Toast.makeText(this, "Still in Dev", Toast.LENGTH_SHORT).show();

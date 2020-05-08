@@ -182,28 +182,20 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         @Override
         protected void onProgressUpdate(Void... values) {
 
-            String letterInPattern = game.getLetterInPatten(letterCounter,letterCounter+1);
+                String letterInPattern = game.getLetterInPatten(letterCounter, letterCounter + 1);
 
-            if(letterInPattern.equals("a"))
-            {
-                game.buttonBlinkIndicator(buttonA);
-            }
-            else if(letterInPattern.equals("b"))
-            {
-                game.buttonBlinkIndicator(buttonB);
-            }
-            else if(letterInPattern.equals("c"))
-            {
-                game.buttonBlinkIndicator(buttonC);
-            }
-            else if(letterInPattern.equals("d"))
-            {
-                game.buttonBlinkIndicator(buttonD);
-            }
-            else
-            {
-                game.buttonBlinkIndicator(buttonE);
-            }
+                if (letterInPattern.equals("a")) {
+                    game.buttonBlinkIndicator(buttonA);
+                } else if (letterInPattern.equals("b")) {
+                    game.buttonBlinkIndicator(buttonB);
+                } else if (letterInPattern.equals("c")) {
+                    game.buttonBlinkIndicator(buttonC);
+                } else if (letterInPattern.equals("d")) {
+                    game.buttonBlinkIndicator(buttonD);
+                } else {
+                    game.buttonBlinkIndicator(buttonE);
+                }
+
             super.onProgressUpdate(values);
         }
 
@@ -241,7 +233,6 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             setButtonStatus(true);
             buttonIndicator.setBackgroundColor(Color.GREEN);
             buttonSubmit.setEnabled(true);
-
             super.onProgressUpdate(values);
         }
     }
