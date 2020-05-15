@@ -10,9 +10,9 @@ import retrofit2.http.Path;
 
 public interface WaifuApiService {
 
-    String BASE_URL = "https://myanimelist.net/";
+    String BASE_URL = "https://api.jikan.moe/v3/";
 
-    @GET("character/{id}")
-    Call<List<AnimeClass>> searchInfo(@Path("id") int id);
+    @GET("character/{number}/pictures")
+    Call<AnimeClass> searchInfo(@Path("number") String number);
 
 }
