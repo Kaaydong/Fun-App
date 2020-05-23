@@ -12,12 +12,7 @@
         <item
             android:id="@+id/nav_waifuGenerator"
             android:icon="@drawable/waifu_generator_icon"
-            android:title="Waifu Generator" />
-        <item
-            android:id="@+id/nav_husbandoGenerator"
-            android:icon="@drawable/husbando_icon"
-            android:title="Husbando Generator"
-            />
+            android:title="Waifu/Husbando Generator" />
     </group>
 </menu>
 

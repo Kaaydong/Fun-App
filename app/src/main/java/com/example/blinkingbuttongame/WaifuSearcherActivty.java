@@ -2,23 +2,20 @@ package com.example.blinkingbuttongame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.blinkingbuttongame.R;
 import com.example.blinkingbuttongame.ui.WaifuApiService;
 import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,9 +27,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WaifuSearcherActivty extends AppCompatActivity {
 
-    Button search;
+    Button searchButton, saveButton;
+    ImageButton backButton;
     ImageView display;
     URL url;
+
+    AnimeClass anime;
+
+    List<String> urlList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,27 +43,53 @@ public class WaifuSearcherActivty extends AppCompatActivity {
 
         wireWidgets();
 
+        saveButton.setEnabled(false);
         setListeners();
     }
 
     public void wireWidgets()
     {
-        search = findViewById(R.id.button_waifulayout_search);
+        searchButton = findViewById(R.id.button_waifulayout_search);
         display = findViewById(R.id.imageView_waifulayout_display);
+        backButton = (ImageButton)findViewById(R.id.Imagebutton_waifulayout_backbutton);
+        saveButton = findViewById(R.id.button_waifulayout_savepicture);
     }
 
     public void setListeners()
     {
-        search.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callLink("19");
+
+                callLink(randomNumber());
+                saveButton.setEnabled(true);
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent targetIntent = new Intent(WaifuSearcherActivty.this, MainActivity2.class);
+                startActivity(targetIntent);
+                finish();
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    urlList.add(anime.returnURL());
             }
         });
     }
 
     public void callLink(String number)
     {
+        DisableButton disableButton = new DisableButton();
+        disableButton.execute();
+
+        Log.d("LOOK HERE","This is the id: " + number);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WaifuApiService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -75,16 +103,17 @@ public class WaifuSearcherActivty extends AppCompatActivity {
             public void onResponse(Call<AnimeClass> call, Response<AnimeClass> response) {
 
                     Log.e("THIS", "SOMETHING HAPPENED");
+
                 if (!response.isSuccessful()) {
                     Log.e("API Error", "BAD STUFF HAPPENED, probably character doesnt exist");
                     Toast.makeText(WaifuSearcherActivty.this, "hi", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                AnimeClass anime = response.body();
+               anime = response.body();
 
               //  search.setText(anime.returnURL(1));
-                loadImage(anime.returnURL(1),display);
+                loadImage(anime.returnURL(),display);
 
             }
 
@@ -102,4 +131,43 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         Picasso.get().load(url).into(image);
     }
 
+    public String randomNumber() // jikan goes up to at least 2000.
+    {
+        String id = "" + (int)(Math.random() * 2000 + 1);
+        return id;
+    }
+
+    public void timer(long milli)
+    {
+        try {
+            Thread.sleep(milli);
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private class DisableButton extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            searchButton.setEnabled(false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            timer(5000);
+            publishProgress(voids);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            searchButton.setEnabled(true);
+            super.onProgressUpdate(values);
+        }
+    }
 }

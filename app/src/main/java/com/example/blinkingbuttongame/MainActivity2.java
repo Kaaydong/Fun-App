@@ -68,9 +68,6 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
                 startActivity(waifuIntent);
                 finish();
                 break;
-               case R.id.nav_husbandoGenerator:
-            Toast.makeText(this, "Still in Dev", Toast.LENGTH_SHORT).show();
-                break;
         }
 
         return true;

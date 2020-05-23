@@ -41,9 +41,10 @@ public class AnimeClass {
         this.pictures = pictures;
     }
 
-    public String returnURL(int index)
+    public String returnURL()
     {
-        String url = pictures.get(index).getLarge();
+        int length = pictures.size();
+        String url = pictures.get((int)(Math.random()*length)).getLarge();
         return url;
     }
 
