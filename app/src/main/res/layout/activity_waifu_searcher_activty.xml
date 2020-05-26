@@ -37,8 +37,9 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="162dp"
         android:text="@android:string/search_go"
+        app:layout_constraintBottom_toTopOf="@+id/button_waifulayout_savepicture"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView_waifulayout_display" />
 
@@ -50,7 +51,21 @@
         android:layout_marginTop="93dp"
         android:layout_marginEnd="162dp"
         android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_waifulayout_search" />
+
+    <Button
+        android:id="@+id/button_waifulayout_savedimages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="144dp"
+        android:text="Saved Images"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Imagebutton_waifulayout_backbutton"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.blinkingbuttongame.ui;
+package com.example.blinkingbuttongame;
 
 import com.example.blinkingbuttongame.AnimeClass;
 

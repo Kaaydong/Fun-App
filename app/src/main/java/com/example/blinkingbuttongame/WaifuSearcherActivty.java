@@ -12,10 +12,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.blinkingbuttongame.ui.WaifuApiService;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WaifuSearcherActivty extends AppCompatActivity {
 
-    Button searchButton, saveButton;
+    Button searchButton, saveButton, goToSavedImagesButton;
     ImageButton backButton;
     ImageView display;
     URL url;
@@ -35,15 +35,27 @@ public class WaifuSearcherActivty extends AppCompatActivity {
     AnimeClass anime;
 
     List<String> urlList;
+    List<String> nameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waifu_searcher_activty);
 
+        Intent listIntent = getIntent();
+        urlList = listIntent.getStringArrayListExtra("url_list");
+        nameList = listIntent.getStringArrayListExtra("name_list");
+
+        if(urlList == null) {
+            urlList = new ArrayList<>();
+            nameList = new ArrayList<>();
+        }
+
         wireWidgets();
 
         saveButton.setEnabled(false);
+        goToSavedImagesButton.setEnabled(false);
+
         setListeners();
     }
 
@@ -53,16 +65,29 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         display = findViewById(R.id.imageView_waifulayout_display);
         backButton = (ImageButton)findViewById(R.id.Imagebutton_waifulayout_backbutton);
         saveButton = findViewById(R.id.button_waifulayout_savepicture);
+        goToSavedImagesButton = findViewById(R.id.button_waifulayout_savepicture);
     }
 
     public void setListeners()
     {
+        goToSavedImagesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent targetIntent = new Intent(WaifuSearcherActivty.this, AnimeListView.class);
+                targetIntent.putStringArrayListExtra("first_url_list",(ArrayList<String>)urlList);
+                targetIntent.putStringArrayListExtra("first_name_list",(ArrayList<String>)nameList);
+                startActivity(targetIntent);
+                finish();
+            }
+        });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 callLink(randomNumber());
                 saveButton.setEnabled(true);
+                goToSavedImagesButton.setEnabled(true);
             }
         });
 
@@ -79,6 +104,7 @@ public class WaifuSearcherActivty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     urlList.add(anime.returnURL());
+                    saveButton.setEnabled(false);
             }
         });
     }

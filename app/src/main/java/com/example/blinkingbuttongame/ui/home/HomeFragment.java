@@ -14,9 +14,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.blinkingbuttongame.R;
 
+import org.w3c.dom.Text;
+
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+
+    TextView home;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,6 +34,12 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+        wireWidgets();
         return root;
+    }
+
+    public void wireWidgets()
+    {
+        home = getActivity().findViewById(R.id.text_home);
     }
 }

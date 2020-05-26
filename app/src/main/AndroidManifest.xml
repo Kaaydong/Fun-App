@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.blinkingbuttongame">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".WaifuSearcherActivty"></activity>
+        <activity android:name=".AnimeListView"></activity>
+        <activity android:name=".WaifuSearcherActivty" />
         <activity
             android:name=".MainActivity2"
             android:label="@string/title_activity_main2"
@@ -22,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".BlinkingGameActivity"
             android:parentActivityName=".MainActivity" />
