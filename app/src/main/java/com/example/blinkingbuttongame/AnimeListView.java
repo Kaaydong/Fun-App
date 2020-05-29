@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ public class AnimeListView extends AppCompatActivity {
     private ListView listView;
     private List<String> urlList;
     private List<String> nameList;
-
+    private AnimeAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +35,11 @@ public class AnimeListView extends AppCompatActivity {
         urlList = listIntent.getStringArrayListExtra("first_url_list");
         nameList = listIntent.getStringArrayListExtra("first_name_list");
 
+        Log.e("STUFF HAPPENED", urlList.get(0));
         wireWidgets();
 
-        AnimeAdapter adapter = new AnimeAdapter(this, 0, nameList ,urlList  );
+        adapter = new AnimeAdapter( nameList, urlList );
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -46,7 +49,6 @@ public class AnimeListView extends AppCompatActivity {
                 targetIntent.putStringArrayListExtra("name_List", (ArrayList<String>) nameList);
                 startActivity(targetIntent);
                 finish();
-
             }
         });
     }
@@ -58,12 +60,11 @@ public class AnimeListView extends AppCompatActivity {
 
     private class AnimeAdapter extends ArrayAdapter<String>
     {
-        Context context;
         List<String> name;
         List<String> url;
 
-        public AnimeAdapter(@NonNull Context context, int resource, List<String> name, List<String> url) {
-            super(context, resource);
+        public AnimeAdapter(List<String> name, List<String> url) {
+            super(AnimeListView.this,-1, url);
             this.name = name;
             this.url = url;
         }
@@ -72,13 +73,18 @@ public class AnimeListView extends AppCompatActivity {
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = getLayoutInflater().inflate(R.layout.listview_row,parent,false);
-            TextView textView = row.findViewById(R.id.textView_row_rowThing);
+            LayoutInflater inflater = getLayoutInflater();
 
-            textView.setText(name.get(position));
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.listview_row, parent, false);
+            }
+            Log.e("LOOK HERE", "INFLATER HAPPENED");
 
-            return row;
+            TextView textView = convertView.findViewById(R.id.textView_row_rowThing);
+
+            textView.setText(url.get(position));
+
+            return convertView;
         }
     }
 }

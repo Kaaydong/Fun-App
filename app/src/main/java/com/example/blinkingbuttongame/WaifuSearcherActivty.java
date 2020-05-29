@@ -42,6 +42,12 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waifu_searcher_activty);
 
+        wireWidgets();
+
+        saveButton.setEnabled(false);
+
+        setListeners();
+
         Intent listIntent = getIntent();
         urlList = listIntent.getStringArrayListExtra("url_list");
         nameList = listIntent.getStringArrayListExtra("name_list");
@@ -49,14 +55,9 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         if(urlList == null) {
             urlList = new ArrayList<>();
             nameList = new ArrayList<>();
+            goToSavedImagesButton.setEnabled(false);
         }
 
-        wireWidgets();
-
-        saveButton.setEnabled(false);
-        goToSavedImagesButton.setEnabled(false);
-
-        setListeners();
     }
 
     public void wireWidgets()
@@ -65,7 +66,7 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         display = findViewById(R.id.imageView_waifulayout_display);
         backButton = (ImageButton)findViewById(R.id.Imagebutton_waifulayout_backbutton);
         saveButton = findViewById(R.id.button_waifulayout_savepicture);
-        goToSavedImagesButton = findViewById(R.id.button_waifulayout_savepicture);
+        goToSavedImagesButton = findViewById(R.id.button_waifulayout_savedimages);
     }
 
     public void setListeners()
@@ -87,7 +88,6 @@ public class WaifuSearcherActivty extends AppCompatActivity {
 
                 callLink(randomNumber());
                 saveButton.setEnabled(true);
-                goToSavedImagesButton.setEnabled(true);
             }
         });
 
@@ -105,6 +105,7 @@ public class WaifuSearcherActivty extends AppCompatActivity {
             public void onClick(View view) {
                     urlList.add(anime.returnURL());
                     saveButton.setEnabled(false);
+                goToSavedImagesButton.setEnabled(true);
             }
         });
     }
@@ -150,6 +151,11 @@ public class WaifuSearcherActivty extends AppCompatActivity {
                 Log.e("Error", t.getMessage());
             }
         });
+    }
+
+    public void checkForPast()
+    {
+
     }
 
     public void loadImage(String url, ImageView image)

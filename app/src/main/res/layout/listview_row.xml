@@ -8,13 +8,10 @@
 
     <TextView
         android:id="@+id/textView_row_rowThing"
-        android:layout_width="149dp"
-        android:layout_height="27dp"
+        android:layout_width="173dp"
+        android:layout_height="43dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="322dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Name" />
