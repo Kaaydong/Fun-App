@@ -20,9 +20,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity2 extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private List<String> urlList, nameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        getPastInfo();
     }
 
     @Override
@@ -52,17 +57,28 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
         {
             case R.id.nav_blinkingGame:
                 Intent blinkingIntent = new Intent(MainActivity2.this, BlinkingGameActivity.class);
+                blinkingIntent.putStringArrayListExtra("url_list", (ArrayList<String>)urlList);
+                blinkingIntent.putStringArrayListExtra("name_List", (ArrayList<String>)nameList);
                 startActivity(blinkingIntent);
                 finish();
                 break;
               case R.id.nav_waifuGenerator:
                 Intent waifuIntent = new Intent(MainActivity2.this, WaifuSearcherActivty.class);
+                  waifuIntent.putStringArrayListExtra("url_list", (ArrayList<String>)urlList);
+                  waifuIntent.putStringArrayListExtra("name_List", (ArrayList<String>)nameList);
                 startActivity(waifuIntent);
                 finish();
                 break;
         }
 
         return true;
+    }
+
+    public void getPastInfo()
+    {
+        Intent listIntent = getIntent();
+        urlList = listIntent.getStringArrayListExtra("first_url_list");
+        nameList = listIntent.getStringArrayListExtra("first_name_list");
     }
 
     @Override

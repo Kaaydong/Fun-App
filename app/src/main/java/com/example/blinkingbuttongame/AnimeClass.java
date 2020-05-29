@@ -9,6 +9,8 @@ public class AnimeClass {
     int request_cache_expiry;
     List<urlLinks> pictures;
 
+    String url;
+
     public String getRequest_hash() {
         return request_hash;
     }
@@ -41,10 +43,15 @@ public class AnimeClass {
         this.pictures = pictures;
     }
 
-    public String returnURL()
+    public String returnRandomURL()
     {
         int length = pictures.size();
-        String url = pictures.get((int)(Math.random()*length)).getLarge();
+        url = pictures.get((int)(Math.random()*length)).getLarge();
+        return url;
+    }
+
+    public String returnUrlLink()
+    {
         return url;
     }
 

@@ -10,6 +10,9 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlinkingGameActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button buttonA, buttonB, buttonC, buttonD, buttonE;
@@ -20,6 +23,8 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
     BlinkingGame game;
 
     int letterCounter;
+
+    private List<String> urlList, nameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,15 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
 
         setButtonStatus(false);
         buttonSubmit.setEnabled(false);
+
+        getPastInfo();
+    }
+
+    public void getPastInfo()
+    {
+        Intent listIntent = getIntent();
+        urlList = listIntent.getStringArrayListExtra("url_list");
+        nameList = listIntent.getStringArrayListExtra("name_list");
     }
 
     public void wireWidgets()
@@ -130,6 +144,8 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                     break;
                 case R.id.imageButton_blink_back:
                     Intent targetIntent = new Intent(BlinkingGameActivity.this,MainActivity2.class);
+                    targetIntent.putStringArrayListExtra("first_url_list",(ArrayList<String>)urlList);
+                    targetIntent.putStringArrayListExtra("first_name_list",(ArrayList<String>)nameList);
                     startActivity(targetIntent);
                     finish();
                     break;

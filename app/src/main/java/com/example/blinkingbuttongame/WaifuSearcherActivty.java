@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,6 @@ public class WaifuSearcherActivty extends AppCompatActivity {
     Button searchButton, saveButton, goToSavedImagesButton;
     ImageButton backButton;
     ImageView display;
-    URL url;
 
     AnimeClass anime;
 
@@ -48,16 +46,7 @@ public class WaifuSearcherActivty extends AppCompatActivity {
 
         setListeners();
 
-        Intent listIntent = getIntent();
-        urlList = listIntent.getStringArrayListExtra("url_list");
-        nameList = listIntent.getStringArrayListExtra("name_list");
-
-        if(urlList == null) {
-            urlList = new ArrayList<>();
-            nameList = new ArrayList<>();
-            goToSavedImagesButton.setEnabled(false);
-        }
-
+        checkForPastIntent();
     }
 
     public void wireWidgets()
@@ -87,7 +76,6 @@ public class WaifuSearcherActivty extends AppCompatActivity {
             public void onClick(View view) {
 
                 callLink(randomNumber());
-                saveButton.setEnabled(true);
             }
         });
 
@@ -95,6 +83,8 @@ public class WaifuSearcherActivty extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent targetIntent = new Intent(WaifuSearcherActivty.this, MainActivity2.class);
+                targetIntent.putStringArrayListExtra("first_url_list",(ArrayList<String>)urlList);
+                targetIntent.putStringArrayListExtra("first_name_list",(ArrayList<String>)nameList);
                 startActivity(targetIntent);
                 finish();
             }
@@ -103,7 +93,7 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    urlList.add(anime.returnURL());
+                    urlList.add(anime.returnUrlLink());
                     saveButton.setEnabled(false);
                 goToSavedImagesButton.setEnabled(true);
             }
@@ -140,8 +130,11 @@ public class WaifuSearcherActivty extends AppCompatActivity {
                anime = response.body();
 
               //  search.setText(anime.returnURL(1));
-                loadImage(anime.returnURL(),display);
+                loadImage(anime.returnRandomURL(),display);
 
+                if(!checkForExisitingUrl(anime.returnUrlLink())) {
+                    saveButton.setEnabled(true);
+                }
             }
 
             @Override
@@ -153,9 +146,35 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         });
     }
 
-    public void checkForPast()
+    public void checkForPastIntent()
     {
+        Intent listIntent = getIntent();
+        urlList = listIntent.getStringArrayListExtra("url_list");
+        nameList = listIntent.getStringArrayListExtra("name_list");
+        int position = listIntent.getIntExtra("position", -1);
 
+        if(urlList == null) {
+            urlList = new ArrayList<>();
+            nameList = new ArrayList<>();
+
+            goToSavedImagesButton.setEnabled(false);
+        }
+        else if(position != -1)
+        {
+            loadImage(urlList.get(position),display);
+        }
+    }
+
+    public boolean checkForExisitingUrl(String url)
+    {
+        if(urlList != null) {
+            for (int i = 0; i < urlList.size(); i++) {
+                if (urlList.get(i).equals(url)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void loadImage(String url, ImageView image)

@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +48,9 @@ public class AnimeListView extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 Intent targetIntent = new Intent(AnimeListView.this, WaifuSearcherActivty.class);
-                targetIntent.putStringArrayListExtra("url_list", (ArrayList<String>) urlList);
-                targetIntent.putStringArrayListExtra("name_List", (ArrayList<String>) nameList);
+                targetIntent.putStringArrayListExtra("url_list", (ArrayList<String>)urlList);
+                targetIntent.putStringArrayListExtra("name_List", (ArrayList<String>)nameList);
+                targetIntent.putExtra("position", pos);
                 startActivity(targetIntent);
                 finish();
             }
@@ -81,8 +85,10 @@ public class AnimeListView extends AppCompatActivity {
             Log.e("LOOK HERE", "INFLATER HAPPENED");
 
             TextView textView = convertView.findViewById(R.id.textView_row_rowThing);
+            ImageView image = convertView.findViewById(R.id.imageView_row_picture);
 
             textView.setText(url.get(position));
+            Picasso.get().load(url.get(position)).into(image);
 
             return convertView;
         }
