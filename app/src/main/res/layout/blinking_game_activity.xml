@@ -125,4 +125,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/backarrow_24dp" />
 
+    <Button
+        android:id="@+id/button_blink_highscore"
+        android:layout_width="247dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="84dp"
+        android:text="Highscore: 0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButton_blink_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

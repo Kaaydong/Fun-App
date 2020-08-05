@@ -7,16 +7,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 public class BlinkingGameActivity extends AppCompatActivity implements View.OnClickListener{
 
     Button buttonA, buttonB, buttonC, buttonD, buttonE;
-    Button buttonIndicator, buttonRoundNumber, buttonStart, buttonSubmit;
+    Button buttonIndicator, buttonRoundNumber, buttonStart, buttonSubmit, buttonHighScore;
     ImageButton backButton;
 
     Boolean didGameStart;
@@ -24,7 +34,11 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
 
     int letterCounter;
 
+    private static final String FILE_NAME = "HighScore.txt";
+
     private List<String> urlList, nameList;
+
+    String highScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +55,10 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         buttonSubmit.setEnabled(false);
 
         getPastInfo();
+
+        highScore = "0";
+        readHighScoreFile();
+        updateHighScoreBoard();
     }
 
     public void getPastInfo()
@@ -62,6 +80,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
         buttonRoundNumber = findViewById(R.id.button_blink_round);
         buttonStart = findViewById(R.id.button_blink_start);
         buttonSubmit = findViewById(R.id.button_blink_submit);
+        buttonHighScore = findViewById(R.id.button_blink_highscore);
 
         backButton = (ImageButton)findViewById(R.id.imageButton_blink_back);
 
@@ -87,6 +106,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                     game = new BlinkingGame();
                     buttonStart.setText("");
                     buttonRoundNumber.setText("" + game.getRoundNumber());
+
                     runBlinkSequence();
                 }
                 else
@@ -105,7 +125,8 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
                 if(game.match())
                 {
                     buttonStart.setText("Next Match");
-
+                    updateHighScore();
+                    updateHighScoreBoard();
                 }
                 else
                 {
@@ -173,6 +194,95 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             buttonA.setText(game.getPattern());
         }
 
+    public void writeHighScoreFile(int score)
+    {
+        String value = "" + score;
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fileOutputStream.write(value.getBytes());
+            fileOutputStream.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if(fileOutputStream != null)
+            {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void readHighScoreFile()
+    {
+        FileInputStream fileInputStream = null;
+
+        try{
+            fileInputStream = openFileInput(FILE_NAME);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String lines;
+            while ((lines = bufferedReader.readLine()) != null){
+                stringBuilder.append(lines).append("\n");
+            }
+
+            if(stringBuilder.toString() != null) {
+                highScore = stringBuilder.toString();
+            }
+            else
+            {
+                highScore = "0";
+            }
+
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            if(fileInputStream != null)
+            {
+                try{ fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void updateHighScore()
+    {
+        if (Integer.parseInt(highScore.trim()) < game.getRoundNumber()) {
+            writeHighScoreFile(game.getRoundNumber());
+            readHighScoreFile();
+        }
+
+    }
+
+    public void updateHighScoreBoard()
+    {
+        buttonHighScore.setText("Highscore: " + highScore);
+    }
 
     public void timer(long milli)
     {
@@ -252,6 +362,7 @@ public class BlinkingGameActivity extends AppCompatActivity implements View.OnCl
             super.onProgressUpdate(values);
         }
     }
+
 }
 
 
