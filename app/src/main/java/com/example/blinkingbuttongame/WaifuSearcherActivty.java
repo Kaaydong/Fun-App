@@ -3,6 +3,7 @@ package com.example.blinkingbuttongame;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +13,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,12 +45,11 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         setContentView(R.layout.activity_waifu_searcher_activty);
 
         wireWidgets();
-
         saveButton.setEnabled(false);
-
         setListeners();
 
-        checkForPastIntent();
+        loadLists();
+        checkForPastPicture();
     }
 
     public void wireWidgets()
@@ -96,8 +99,36 @@ public class WaifuSearcherActivty extends AppCompatActivity {
                     urlList.add(anime.returnUrlLink());
                     saveButton.setEnabled(false);
                 goToSavedImagesButton.setEnabled(true);
+
+                saveLists();
             }
         });
+    }
+
+    private void saveLists()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("Url List", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(urlList);
+        editor.putString("Url List", json);
+        editor.apply();
+    }
+
+    private void loadLists()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("Url List", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("Url List", null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        urlList = gson.fromJson(json, type);
+
+        if(urlList == null)
+        {
+            urlList = new ArrayList<>();
+
+            goToSavedImagesButton.setEnabled(false);
+        }
     }
 
     public void callLink(String number)
@@ -146,20 +177,12 @@ public class WaifuSearcherActivty extends AppCompatActivity {
         });
     }
 
-    public void checkForPastIntent()
+    public void checkForPastPicture()
     {
         Intent listIntent = getIntent();
-        urlList = listIntent.getStringArrayListExtra("url_list");
-        nameList = listIntent.getStringArrayListExtra("name_list");
         int position = listIntent.getIntExtra("position", -1);
 
-        if(urlList == null) {
-            urlList = new ArrayList<>();
-            nameList = new ArrayList<>();
-
-            goToSavedImagesButton.setEnabled(false);
-        }
-        else if(position != -1)
+       if((position != -1) && (urlList != null))
         {
             loadImage(urlList.get(position),display);
         }

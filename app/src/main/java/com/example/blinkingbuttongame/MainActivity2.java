@@ -66,6 +66,7 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
                 Intent waifuIntent = new Intent(MainActivity2.this, WaifuSearcherActivty.class);
                   waifuIntent.putStringArrayListExtra("url_list", (ArrayList<String>)urlList);
                   waifuIntent.putStringArrayListExtra("name_List", (ArrayList<String>)nameList);
+                  waifuIntent.putExtra("position", -1);
                 startActivity(waifuIntent);
                 finish();
                 break;
